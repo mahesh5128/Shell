@@ -1,0 +1,36 @@
+
+grep is used to search for a specific word or output
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname
+Apple
+Ball
+Cow
+Dog
+Eye
+Fun
+Girl
+House
+
+Q. how to print a name dog from myname file
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep Dog
+Dog
+
+Q. how to print all words except dog
+       UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep -v Dog
+Apple
+Ball
+Cow
+Eye
+Fun
+Girl
+House
+
+
+
+
+
+Q.how to find number of line contains a word Dog
+  UNKNOWN-172-142-32-X:myscripts maheshreddy$ grep -c Dog myname
+1
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep -c Dog
+1
