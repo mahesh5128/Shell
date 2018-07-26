@@ -1,0 +1,176 @@
+Shell scripting
+
+$ Arguments list passed in the current process.
+$$ to print PID of current process
+$# is the number of arguments passed in the current shell command line
+$?  This command returns the exit status of the previously executed command.
+Unset is used to unset the variable   ex: $mm=1800   $unset mm
+> is to override a file
+>> is to append an output to another file
+echo $SHELL is to print current shell you are using
+$ {#variable} is  to know the variable length
+
+
+
+
+
+Grep:
+
+Grep  is to search for a particlar word
+
+Ex:
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname
+Apple
+Ball
+Cow
+Dog
+Eye
+Fun
+Girl
+House
+
+Q. how to print a name dog from myname file
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep Dog
+Dog
+
+Q. how to print all words except dog
+       UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep -v Dog
+Apple
+Ball
+Cow
+Eye
+Fun
+Girl
+House
+
+
+
+
+
+Q.how to find number of line contains a word Dog
+             UNKNOWN-172-142-32-X:myscripts maheshreddy$ grep -c Dog myname
+1
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat myname | grep -c Dog
+1
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ 
+
+
+
+Example 2:
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat scripting
+1 2 3 4 5 6 7 8
+2 3 4 5 6 7 8 9
+3 4 5 6 7 8 9 10
+4 5 6 7 8 9 10 11
+5 6 7 8 9 3 5 3
+6 7 8 9 10 11 12
+7 8 9 3 4 5 6 7
+8 9 4 5 6 7 8 6
+
+
+
+Q. How to print last line of a file
+
+Tail -n 1 filename     or     awk `end {print}’ filename
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat scripting | tail -n 1
+8 9 4 5 6 7 8 6
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat scripting | awk 'END{print}'
+8 9 4 5 6 7 8 6
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ 
+
+
+Q. How to print first & last line  of a file
+
+Head -n 1 filename; tail -n 1 filename      
+
+Sed -n -e ‘1p;$p’ filename
+
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$  sed -n -e '1p;$p' scripting
+1 2 3 4 5 6 7 8
+8 9 4 5 6 7 8 6
+
+
+Q. how to print a particular line in a file
+
+Sed -n ‘linenumberp’
+
+Let’s print 5th line of a scripting file
+
+Ex:  UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat scripting | sed -n '5p'
+5 6 7 8 9 3 5 3
+
+
+
+Q. How to print a lines from 1-3 from a file name called scripting
+
+sed -n  '1,3p;4q' filename
+
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ sed -n  '1,3p;4q' scripting
+1 2 3 4 5 6 7 8
+2 3 4 5 6 7 8 9
+3 4 5 6 7 8 9 10
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ 
+
+
+
+Q. How do you print a particular number lines 
+
+Please print 2nd and 8th line from a scripting file
+
+sed -n  '2p;8p' filename
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ sed -n  '2p;8p' scripting
+2 3 4 5 6 7 8 9
+8 9 4 5 6 7 8 6
+
+
+
+Q. Please print 5th line 4th column
+
+Cat scripting | awk ‘NR==5{print $4}’
+Or 
+ awk 'NR==5{print $4}' scripting
+
+
+
+
+Q. How to print a word multiple times
+
+Print Hello word 5 times
+
+seq 5 | awk '{print "Hello World"}'
+
+
+Q.How to Replace a word with another word in a file
+
+Sed -i ‘s/oldword/newword/g’ filename     sometimes -i won’t work
+Or 
+
+Sed ‘s/oldword/newword/g’ filename
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat remo
+2 3 4 5 6 7 8 9
+8 9 4 5 6 7 8 6
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ sed  's/8/10/g' remo
+2 3 4 5 6 7 10 9
+10 9 4 5 6 7 10 6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
