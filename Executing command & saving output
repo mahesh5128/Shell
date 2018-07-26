@@ -1,0 +1,8 @@
+
+This Shell Script is to Execute a command in Multple hosts listed on servers.txt file and get the output to a file
+
+
+
+for host in $(cat servers.txt);
+do ssh "$host" "$command" >"output.$host"; 
+done
