@@ -1,2 +1,2 @@
 # Shell
-Shell Scripts
+Here learn basics about shell scripting
