@@ -1,0 +1,13 @@
+Shell script to Execute a script in multpli servers and extract a last line for confirmation
+
+
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat dataset.sh
+#!/usr/bin/bash
+
+for host in $(cat hostlist.txt);
+   do  ssh -A $host  "path to the script | awk 'END{print}'" 
+       echo $host
+       echo "*****NEXT HOST*********"
+    
+done
