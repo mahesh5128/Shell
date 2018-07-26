@@ -1,0 +1,6 @@
+Here I am writing a script to validate a New host
+
+UNKNOWN-172-142-32-X:myscripts maheshreddy$ cat hostcheck.sh
+for host in $(cat newhosts.txt);
+do ssh -A $host  "whoami;uname -a;uptime;w;last -10;df -h;free -g;which hwconfig;rpm -qa;dmesg | grep error;cat /var/log/mcelog ">"output.$host"
+done
