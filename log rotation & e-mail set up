@@ -1,0 +1,116 @@
+this script is to set up log rotation & send an e-mail with error message.
+Process name: xudad 
+servers list file: testservers
+
+
+
+
+
+#!/bin/sh
+
+LOG_FILE="execution.log"
+echo > $LOG_FILE
+
+#cron entry
+#*/15 * * * * /u/RSA_CM/restart.sh
+    case "$1" in
+      -h)  echo "Usage: sh script.sh"
+           echo "Purpose:"
+           exit 1;;
+      -r)  restart_flag=2;;
+      --)   shift; break;;
+      -*)
+           echo "Usage: sh script.sh"
+           echo "Purpose:"
+           exit 1;;
+      *)    break;;          # terminate while loop
+    esac
+
+servers=$(cat testservers)
+restartservers=$(tac testservers)
+
+log_a_msg()
+{
+      msg=$1
+      echo "$msg"
+      echo "$msg" >> $LOG_FILE
+}
+
+send_email()
+{
+      recepient=$1
+      msg=$2
+      subject=$3
+      echo "$2" | mail -s "$3" "$1"
+      echo "email triggered for $recepient with msg as $msg, and subject as $subject ." >> $LOG_FILE
+}
+
+#This command is never ending command, so using the below command to send 2 ICMP packets..
+ping_test()
+{
+ping_device=$1
+ping $ping_device -c 2 -w 2 2>&1 1>/dev/null
+if [ $? -ne 0 ]; then
+      echo "Ping failure occurred.. so script exiting for device - $ping_device\n"
+        return 1
+else
+        return 0
+fi
+}
+
+for line in $servers; do
+           log_a_msg "checking for $line"
+           ping_test $line
+        rc=$?
+        if [ $rc -ne 0 ]; then
+              log_a_msg "Device is offline. Sending Page!"
+              #Email Page
+        else
+              xudadcheck=`ssh -i /root/.ssh/root.tsts4230 $line 'ps -ef |grep -v grep | grep xudad | wc -l'`
+                 if [ $xudadcheck -ne 0 ] ; then
+                      log_a_msg "Xudad is running. No Action Needed."
+                 else
+                      log_a_msg "Xudad is NOT running!!!"
+                      #Xudad not running
+                      restart_flag=2;
+                      break;
+            fi
+        fi
+done
+
+exit 0
+
+if [$restart_flag -eq 2]; then
+      for line in $servers; do
+           echo "Server $line"
+           log_a_msg "Server $line"
+           #local script
+           stopcmd=`ssh -i /root/.ssh/root.tsts4230 $line 'sh /u/RSA_CM/STOP 2&>1 1>/dev/null; echo $?;'`
+           R1=$?
+           if [ $stopcmd -eq 0 && $R1 -eq 0 ] ; then
+                 echo "SUCCESS: STOP script execution status"
+                 log_a_msg "SUCCESS: STOP script execution status"
+           else
+                 echo "FAILURE: STOP script execution status"
+                 log_a_msg "FAILURE: STOP script execution status"
+                 exit 1
+           fi
+      done
+
+      for line in $restartservers; do
+           echo "checking for $line"
+           log_a_msg "checking for $line"
+           expect RSAEXRESTART$line
+      done
+
+       for line in $servers; do
+      xudadcheck=`ssh -i /root/.ssh/root.tsts4230 $line 'ps -ef |grep -v grep | grep xudad | wc -l'`
+      if [ $xudadcheck -ne 0] ; then
+           # if errors in action log :
+           #send_email maheshr@mail.com "errors in action log" "errors in action log"
+           #send_email Mahesh@mail.com "action log info" "action log info"
+      else
+           echo "page here-2!!!"
+      fi
+       done
+fi
